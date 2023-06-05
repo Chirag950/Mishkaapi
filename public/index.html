@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Control Board Outputs</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $("#boardForm").submit(function(event) {
+        event.preventDefault(); // Prevent form submission
+
+        // Get the entered board ID
+        var boardId = $("#boardIdInput").val();
+
+        // Attach the board ID to the button URLs
+        var baseUrl = "https://chiragapi.vercel.app/";
+        var onUrl = baseUrl + "on?id=" + boardId + "&output=";
+        var offUrl = baseUrl + "off?id=" + boardId + "&output=";
+
+        // Attach the URLs to the buttons
+        for (var i = 1; i <= 12; i++) {
+          var buttonOnUrl = onUrl + i;
+          var buttonOffUrl = offUrl + i;
+
+          $("#button" + i + "on").click(function() {
+            // Send an HTTP GET request when the ON button is clicked
+            $.get(buttonOnUrl, function(data) {
+              console.log("Output " + i + " is turned on");
+            });
+          });
+
+          $("#button" + i + "off").click(function() {
+            // Send an HTTP GET request when the OFF button is clicked
+            $.get(buttonOffUrl, function(data) {
+              console.log("Output " + i + " is turned off");
+            });
+          });
+        }
+      });
+    });
+  </script>
+</head>
+<body>
+  <h1>Control Board Outputs</h1>
+  <form id="boardForm">
+    <label for="boardIdInput">Enter Board ID:</label>
+    <input type="text" id="boardIdInput" required>
+    <input type="submit" value="Submit">
+  </form>
+
+  <h2>Outputs</h2>
+  <button id="button1on">Output 1 ON</button>
+  <button id="button1off">Output 1 OFF</button>
+  <button id="button2on">Output 2 ON</button>
+  <button id="button2off">Output 2 OFF</button>
+  <button id="button3on">Output 3 ON</button>
+  <button id="button3off">Output 3 OFF</button>
+  <button id="button4on">Output 4 ON</button>
+  <button id="button4off">Output 4 OFF</button>
+  <button id="button5on">Output 5 ON</button>
+  <button id="button5off">Output 5 OFF</button>
+  <button id="button6on">Output 6 ON</button>
+  <button id="button6off">Output 6 OFF</button>
+  <button id="button7on">Output 7 ON</button>
+  <button id="button7off">Output 7 OFF</button>
+  <button id="button8on">Output 8 ON</button>
+  <button id="button8off">Output 8 OFF</button>
+  <button id="button9on">Output 9 ON</button>
+  <button id="button9off">Output 9 OFF</button>
+  <button id="button10on">Output 10 ON</button>
+  <button id="button10off">Output 10 OFF</button>
+  <button id="button11on">Output 11 ON</button>
+  <button id="button11off">Output 11 OFF</button>
+  <button id="button12on">Output 12 ON</button>
+  <button id="button12off">Output 12 OFF</button>
+</body>
+</html>
