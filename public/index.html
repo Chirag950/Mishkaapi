@@ -4,44 +4,41 @@
   <title>Control Board Outputs</title>
   <link rel="stylesheet" type="text/css" href="style.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
- <script>
-  $(document).ready(function() {
-    $("#boardForm").submit(function(event) {
-      event.preventDefault(); // Prevent form submission
-
-      // Get the entered board ID
-      var boardId = $("#boardIdInput").val();
-
-      // Attach the board ID to the button URLs
-      var baseUrl = "https://mishkaapi.vercel.app/";
-      var onUrl = baseUrl + "on?id=" + boardId + "&output=";
-      var offUrl = baseUrl + "off?id=" + boardId + "&output=";
-
-      // Attach the URLs to the buttons
-      for (var i = 1; i <= 12; i++) {
-        var buttonOnUrl = onUrl + i;
-        var buttonOffUrl = offUrl + i;
-
-        // Use a closure to capture the correct URL values
-        (function(buttonOnUrl, buttonOffUrl) {
+  <script>
+    $(document).ready(function() {
+      $("#boardForm").submit(function(event) {
+        event.preventDefault(); // Prevent form submission
+  
+        // Get the entered board ID
+        var boardId = $("#boardIdInput").val();
+  
+        // Attach the board ID to the button URLs
+        var baseUrl = "https://mishkaapi.vercel.app/";
+        var onUrl = baseUrl + "on?id=" + boardId + "&output=";
+        var offUrl = baseUrl + "off?id=" + boardId + "&output=";
+  
+        // Attach the URLs to the buttons
+        for (let i = 1; i <= 12; i++) {
+          var buttonOnUrl = onUrl + i;
+          var buttonOffUrl = offUrl + i;
+  
           $("#button" + i + "on").click(function() {
             // Send an HTTP GET request when the ON button is clicked
             $.get(buttonOnUrl, function(data) {
               console.log("Output " + i + " is turned on");
             });
           });
-
+  
           $("#button" + i + "off").click(function() {
             // Send an HTTP GET request when the OFF button is clicked
             $.get(buttonOffUrl, function(data) {
               console.log("Output " + i + " is turned off");
             });
           });
-        })(buttonOnUrl, buttonOffUrl);
-      }
+        }
+      });
     });
-  });
-</script>
+  </script>  
 
 </head>
 <body>
