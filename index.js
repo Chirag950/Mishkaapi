@@ -1,4 +1,6 @@
 const express = require('express');
+const path = require('path');
+
 
 const app = express();
 
@@ -10,8 +12,6 @@ const boards = {
     outputs: [false, false, false, false, false, false, false, false, false, false, false, false]
   }
 };
-
-app.use(express.static('public'));
 
 // Endpoint to get the status of an output
 app.get('/status', (req, res) => {
