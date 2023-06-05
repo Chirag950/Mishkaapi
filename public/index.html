@@ -18,28 +18,32 @@
         var offUrl = baseUrl + "off?id=" + boardId + "&output=";
   
         // Attach the URLs to the buttons
-        for (let i = 1; i <= 12; i++) {
+        for (var i = 1; i <= 12; i++) {
           var buttonOnUrl = onUrl + i;
           var buttonOffUrl = offUrl + i;
   
-          $("#button" + i + "on").click(function() {
-            // Send an HTTP GET request when the ON button is clicked
-            $.get(buttonOnUrl, function(data) {
-              console.log("Output " + i + " is turned on");
-            });
-          });
-  
-          $("#button" + i + "off").click(function() {
-            // Send an HTTP GET request when the OFF button is clicked
-            $.get(buttonOffUrl, function(data) {
-              console.log("Output " + i + " is turned off");
-            });
-          });
+          attachButtonClickHandler(buttonOnUrl, buttonOffUrl, i);
         }
       });
+  
+      function attachButtonClickHandler(buttonOnUrl, buttonOffUrl, i) {
+        $("#button" + i + "on").click(function() {
+          // Send an HTTP GET request when the ON button is clicked
+          $.get(buttonOnUrl, function(data) {
+            console.log("Output " + i + " is turned on");
+          });
+        });
+  
+        $("#button" + i + "off").click(function() {
+          // Send an HTTP GET request when the OFF button is clicked
+          $.get(buttonOffUrl, function(data) {
+            console.log("Output " + i + " is turned off");
+          });
+        });
+      }
     });
-  </script>  
-
+  </script>
+  
 </head>
 <body>
   <h1>Control Board Outputs</h1>
