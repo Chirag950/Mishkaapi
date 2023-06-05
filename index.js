@@ -1,4 +1,5 @@
 const express = require('express');
+const jquery = require('jquery');
 const path = require('path');
 
 
