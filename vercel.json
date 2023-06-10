@@ -8,6 +8,10 @@
   ],
   "routes": [
     {
+      "src": "/check-connectivity",
+      "dest": "/index.js"
+    },
+    {
       "src": "/status",
       "dest": "/index.js"
     },

@@ -13,6 +13,17 @@ const boards = {
   }
 };
 
+// Endpoint to check board connectivity
+app.get('/check-connectivity', (req, res) => {
+  const { id } = req.query;
+
+  if (boards[id]) {
+    res.send('connected');
+  } else {
+    res.status(404).send('Board not found');
+  }
+});
+
 // Endpoint to get the status of an output
 app.get('/status', (req, res) => {
   const { id, output } = req.query;
@@ -58,6 +69,14 @@ app.get('/off', (req, res) => {
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
+  const { id } = req.query;
+
+  // Check board connectivity before serving the page
+  if (!id || !boards[id]) {
+    res.send('Board not found');
+    return;
+  }
+
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
