@@ -5,12 +5,33 @@ const app = express();
 
 const boards = {
   board1: {
-    outputs: [false, false, false, false, false, false, false, false, false, false, false, false]
+    outputs: [false, false, false, false, false, false]
   },
   board2: {
-    outputs: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false]
+    outputs: [false, false, false, false, false, false, false, false]
+  },
+  board3: {
+    outputs: [false, false, false, false, false, false, false, false, false, false, false, false]
   }
 };
+
+// Endpoint to get the defined outputs of a board
+app.get('/outputs', (req, res) => {
+  const { id } = req.query;
+
+  const board = boards[id];
+  if (board) {
+    const outputs = board.outputs.map((state, index) => {
+      return {
+        boardId: id,
+        outputIndex: index + 1
+      };
+    });
+    res.json(outputs);
+  } else {
+    res.status(404).send('Board not found');
+  }
+});
 
 // Endpoint to get the status of an output
 app.get('/status', (req, res) => {
@@ -53,20 +74,6 @@ app.get('/off', (req, res) => {
     res.status(404).send('Output not found');
   }
 });
-
-// Endpoint to get the number of outputs for a board
-app.get('/numOutputs', (req, res) => {
-  const { id } = req.query;
-  const board = boards[id];
-
-  if (board) {
-    const numOutputs = board.outputs.length;
-    res.send(numOutputs.toString());
-  } else {
-    res.status(404).send('Board not found');
-  }
-});
-
 
 app.use(express.static(path.join(__dirname, 'public')));
 

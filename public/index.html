@@ -19,48 +19,60 @@
       $('#boardForm').submit((event) => {
         event.preventDefault();
         const boardId = $('#boardId').val();
-        renderOutputs(boardId);
+        fetchOutputs(boardId);
       });
     });
 
-    function renderOutputs(boardId) {
+    async function fetchOutputs(boardId) {
+      try {
+        const response = await fetch(`/outputs?id=${boardId}`);
+        if (response.ok) {
+          const outputs = await response.json();
+          renderOutputs(outputs);
+        } else {
+          throw new Error('Failed to fetch outputs');
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    function renderOutputs(outputs) {
       const outputsContainer = $('#outputsContainer');
       outputsContainer.empty();
 
-      // Send a request to retrieve the number of outputs for the specified board
-      $.get(`/numOutputs?id=${boardId}`, (data) => {
-        const numOutputs = parseInt(data);
+      outputs.forEach((output) => {
+        const outputContainer = $('<div>', { class: 'output-container' });
+        const outputLabel = $('<label>').text(`Output ${output.outputIndex}`);
+        const onButton = $('<button>', {
+          class: 'on-button',
+          text: 'ON',
+          click: () => updateOutput(output.boardId, output.outputIndex, 'on')
+        });
+        const offButton = $('<button>', {
+          class: 'off-button',
+          text: 'OFF',
+          click: () => updateOutput(output.boardId, output.outputIndex, 'off')
+        });
 
-        for (let i = 1; i <= numOutputs; i++) {
-          const outputContainer = $('<div>', { class: 'output-container' });
-          const outputLabel = $('<label>').text(`Output ${i}`);
-          const onButton = $('<button>', {
-            class: 'on-button',
-            text: 'ON',
-            click: () => updateOutput(boardId, i, 'on')
-          });
-          const offButton = $('<button>', {
-            class: 'off-button',
-            text: 'OFF',
-            click: () => updateOutput(boardId, i, 'off')
-          });
-
-          outputContainer.append(outputLabel, onButton, offButton);
-          outputsContainer.append(outputContainer);
-        }
-      }).fail(() => {
-        outputsContainer.html('<p>Failed to retrieve the number of outputs for the specified board.</p>');
+        outputContainer.append(outputLabel, onButton, offButton);
+        outputsContainer.append(outputContainer);
       });
     }
 
-    function updateOutput(boardId, output, state) {
-      const url = `https://mishkaapi.vercel.app/${state}?id=${boardId}&output=${output}`;
-      window.location.href = url;
+    async function updateOutput(boardId, output, state) {
+      try {
+        const response = await fetch(`/${state}?id=${boardId}&output=${output}`);
+        if (response.ok) {
+          const message = await response.text();
+          console.log(message);
+        } else {
+          throw new Error('Failed to update output');
+        }
+      } catch (error) {
+        console.error(error);
+      }
     }
-
-    setTimeout(() => {
-      window.history.back();
-    }, 10000);
   </script>
 </body>
 </html>
