@@ -49,12 +49,12 @@
     function updateOutput(boardId, output, state) {
       const url = `https://mishkaapi.vercel.app/${state}?id=${boardId}&output=${output}`;
       window.location.href = url;
+
+      // Redirect to the main page after 1 second
+      setTimeout(() => {
+        window.location.href = 'https://mishkaapi.vercel.app/';
+      }, 1000);
     }
-
-    setTimeout(() => {
-     window.history.back();
-      }, 10000);
-
   </script>
 </body>
 </html>
