@@ -1,7 +1,5 @@
 const express = require('express');
-const jquery = require('jquery');
 const path = require('path');
-
 
 const app = express();
 
@@ -56,8 +54,20 @@ app.get('/off', (req, res) => {
   }
 });
 
-app.use(express.static(path.join(__dirname, 'public')));
+// Endpoint to get the number of outputs for a board
+app.get('/numOutputs', (req, res) => {
+  const { id } = req.query;
+  const board = boards[id];
 
+  if (board) {
+    const numOutputs = board.outputs.length;
+    res.send(numOutputs.toString());
+  } else {
+    res.status(404).send('Board not found');
+  }
+});
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
