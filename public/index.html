@@ -24,27 +24,30 @@
     });
 
     function renderOutputs(boardId) {
-      const outputsContainer = $('#outputsContainer');
-      outputsContainer.empty();
+  const outputsContainer = $('#outputsContainer');
+  outputsContainer.empty();
 
-      for (let i = 1; i <= 12; i++) {
-        const outputContainer = $('<div>', { class: 'output-container' });
-        const outputLabel = $('<label>').text(`Output ${i}`);
-        const onButton = $('<button>', {
-          class: 'on-button',
-          text: 'ON',
-          click: () => updateOutput(boardId, i, 'on')
-        });
-        const offButton = $('<button>', {
-          class: 'off-button',
-          text: 'OFF',
-          click: () => updateOutput(boardId, i, 'off')
-        });
+  const numOutputs = boards[boardId].outputs.length;
 
-        outputContainer.append(outputLabel, onButton, offButton);
-        outputsContainer.append(outputContainer);
-      }
-    }
+  for (let i = 1; i <= numOutputs; i++) {
+    const outputContainer = $('<div>', { class: 'output-container' });
+    const outputLabel = $('<label>').text(`Output ${i}`);
+    const onButton = $('<button>', {
+      class: 'on-button',
+      text: 'ON',
+      click: () => updateOutput(boardId, i, 'on')
+    });
+    const offButton = $('<button>', {
+      class: 'off-button',
+      text: 'OFF',
+      click: () => updateOutput(boardId, i, 'off')
+    });
+
+    outputContainer.append(outputLabel, onButton, offButton);
+    outputsContainer.append(outputContainer);
+  }
+}
+
 
     function updateOutput(boardId, output, state) {
       const url = `https://mishkaapi.vercel.app/${state}?id=${boardId}&output=${output}`;

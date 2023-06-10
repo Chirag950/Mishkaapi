@@ -13,7 +13,11 @@ const boards = {
 };
 
 // Define the number of outputs for each board
-const numOutputs = 12; // Change this value as per your requirement
+const numOutputs = {
+  board1: 3, // Update with the actual number of outputs for board1
+  board2: 8, // Update with the actual number of outputs for board2
+};
+
 
 for (const board in boards) {
   boards[board].outputs = new Array(numOutputs).fill(false);
