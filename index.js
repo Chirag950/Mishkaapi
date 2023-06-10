@@ -1,7 +1,5 @@
 const express = require('express');
-const jquery = require('jquery');
 const path = require('path');
-
 const app = express();
 
 const boards = {
@@ -13,14 +11,15 @@ const boards = {
   }
 };
 
-// Endpoint to check board connectivity
-app.get('/check-connectivity', (req, res) => {
-  const { id } = req.query;
+// Endpoint to check if the board is connected to the internet
+app.get('/check-connection', (req, res) => {
+  // Replace this with your actual check for board's internet connectivity
+  const isBoardConnected = true;
 
-  if (boards[id]) {
-    res.send('connected');
+  if (isBoardConnected) {
+    res.sendStatus(200);
   } else {
-    res.status(404).send('Board not found');
+    res.redirect('/no-internet.html');
   }
 });
 
@@ -68,19 +67,18 @@ app.get('/off', (req, res) => {
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', (req, res) => {
-  const { id } = req.query;
+// Serve the 'no-internet.html' file when there is no internet connection
+app.get('/no-internet.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'no-internet.html'));
+});
 
-  // Check board connectivity before serving the page
-  if (!id || !boards[id]) {
-    res.send('Board not found');
-    return;
-  }
-
+// Redirect all other routes to the main page
+app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Start the server
-app.listen(process.env.PORT || 4000, () => {
-  console.log('Server is running');
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+  console.log('Server is running on port', PORT);
 });

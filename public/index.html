@@ -16,32 +16,24 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
     $(document).ready(() => {
-      $('#boardForm').submit((event) => {
+      $('#boardForm').on('submit', (event) => {
         event.preventDefault();
         const boardId = $('#boardId').val();
-        checkBoardConnectivity(boardId);
+        renderOutputs(boardId);
       });
+
+      checkBoardConnection();
     });
 
-    function checkBoardConnectivity(boardId) {
-      const outputsContainer = $('#outputsContainer');
-      outputsContainer.empty();
-
-      $.ajax({
-        url: `/check-connectivity?id=${boardId}`,
-        success: function (response) {
-          if (response === 'connected') {
-            renderOutputs(boardId);
-          } else {
-            const message = $('<p>').text('Board not found');
-            outputsContainer.append(message);
-          }
-        },
-        error: function () {
-          const message = $('<p>').text('Board not found');
-          outputsContainer.append(message);
-        }
-      });
+    function checkBoardConnection() {
+      $.get('/check-connection')
+        .done(() => {
+          console.log('Board is connected to the internet');
+        })
+        .fail(() => {
+          console.log('Board is not connected to the internet');
+          window.location.href = '/no-internet.html';
+        });
     }
 
     function renderOutputs(boardId) {
@@ -69,7 +61,13 @@
 
     function updateOutput(boardId, output, state) {
       const url = `/${state}?id=${boardId}&output=${output}`;
-      window.location.href = url;
+      $.get(url)
+        .done((response) => {
+          console.log(response);
+        })
+        .fail((error) => {
+          console.log(error.responseText);
+        });
     }
 
     setTimeout(() => {
