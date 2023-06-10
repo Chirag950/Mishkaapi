@@ -1,17 +1,21 @@
 const express = require('express');
-const jquery = require('jquery');
 const path = require('path');
-
 
 const app = express();
 
 const boards = {
   board1: {
-    outputs: [false, false, false]
+    outputs: []
   },
   board2: {
-    outputs: [false, false, false, false, false, false, false, false, false, false, false, false]
+    outputs: []
   }
+};
+
+// Define the number of outputs for each board
+const numOutputs = {
+  board1: 3, // Update with the actual number of outputs for board1
+  board2: 6, // Update with the actual number of outputs for board2
 };
 
 // Endpoint to get the status of an output
@@ -57,7 +61,6 @@ app.get('/off', (req, res) => {
 });
 
 app.use(express.static(path.join(__dirname, 'public')));
-
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
