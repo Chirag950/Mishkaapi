@@ -8,7 +8,7 @@ const boards = {
     outputs: [false, false, false, false, false, false, false, false, false, false, false, false]
   },
   board2: {
-    outputs: [false, false, false, false, false, false, false, false, false, false, false, false]
+    outputs: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false]
   }
 };
 
