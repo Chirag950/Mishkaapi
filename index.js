@@ -5,32 +5,37 @@ const app = express();
 
 const boards = {
   board1: {
-    outputs: [false, false, false, false, false, false]
+    outputs: []
   },
   board2: {
-    outputs: [false, false, false, false, false, false, false, false]
+    outputs: []
   },
   board3: {
-    outputs: [false, false, false, false, false, false, false, false, false, false, false, false]
+    outputs: []
   }
 };
+
+function getNumOutputs(boardId) {
+  const board = boards[boardId];
+  return board ? board.outputs.length : 0;
+}
 
 // Endpoint to get the defined outputs of a board
 app.get('/outputs', (req, res) => {
   const { id } = req.query;
 
-  const board = boards[id];
-  if (board) {
+  const numOutputs = getNumOutputs(id);
+  if (numOutputs > 0) {
     const outputs = [];
-    for (let i = 0; i < board.outputs.length; i++) {
+    for (let i = 1; i <= numOutputs; i++) {
       outputs.push({
         boardId: id,
-        outputIndex: i + 1
+        outputIndex: i
       });
     }
     res.json(outputs);
   } else {
-    res.status(404).send('Board not found');
+    res.status(404).send('Board not found or no outputs defined');
   }
 });
 
@@ -39,8 +44,9 @@ app.get('/status', (req, res) => {
   const { id, output } = req.query;
   const outputIndex = parseInt(output) - 1;
 
-  const board = boards[id];
-  if (board && outputIndex >= 0 && outputIndex < board.outputs.length) {
+  const numOutputs = getNumOutputs(id);
+  if (numOutputs > 0 && outputIndex >= 0 && outputIndex < numOutputs) {
+    const board = boards[id];
     const status = board.outputs[outputIndex] ? 'ON' : 'OFF';
     res.send(status);
   } else {
@@ -53,8 +59,9 @@ app.get('/on', (req, res) => {
   const { id, output } = req.query;
   const outputIndex = parseInt(output) - 1;
 
-  const board = boards[id];
-  if (board && outputIndex >= 0 && outputIndex < board.outputs.length) {
+  const numOutputs = getNumOutputs(id);
+  if (numOutputs > 0 && outputIndex >= 0 && outputIndex < numOutputs) {
+    const board = boards[id];
     board.outputs[outputIndex] = true;
     res.send('Output turned on');
   } else {
@@ -67,8 +74,9 @@ app.get('/off', (req, res) => {
   const { id, output } = req.query;
   const outputIndex = parseInt(output) - 1;
 
-  const board = boards[id];
-  if (board && outputIndex >= 0 && outputIndex < board.outputs.length) {
+  const numOutputs = getNumOutputs(id);
+  if (numOutputs > 0 && outputIndex >= 0 && outputIndex < numOutputs) {
+    const board = boards[id];
     board.outputs[outputIndex] = false;
     res.send('Output turned off');
   } else {
