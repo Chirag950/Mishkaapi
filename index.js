@@ -1,5 +1,8 @@
 const express = require('express');
+const jquery = require('jquery');
 const path = require('path');
+
+
 const app = express();
 
 const boards = {
@@ -10,18 +13,6 @@ const boards = {
     outputs: [false, false, false, false, false, false, false, false, false, false, false, false]
   }
 };
-
-// Endpoint to check if the board is connected to the internet
-app.get('/check-connection', (req, res) => {
-  // Replace this with your actual check for board's internet connectivity
-  const isBoardConnected = true;
-
-  if (isBoardConnected) {
-    res.sendStatus(200);
-  } else {
-    res.redirect('/no-internet.html');
-  }
-});
 
 // Endpoint to get the status of an output
 app.get('/status', (req, res) => {
@@ -67,18 +58,12 @@ app.get('/off', (req, res) => {
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Serve the 'no-internet.html' file when there is no internet connection
-app.get('/no-internet.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'no-internet.html'));
-});
 
-// Redirect all other routes to the main page
-app.get('*', (req, res) => {
+app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Start the server
-const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-  console.log('Server is running on port', PORT);
+app.listen(process.env.PORT || 4000, () => {
+  console.log('Server is running');
 });

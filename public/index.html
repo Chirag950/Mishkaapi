@@ -16,25 +16,12 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
     $(document).ready(() => {
-      $('#boardForm').on('submit', (event) => {
+      $('#boardForm').submit((event) => {
         event.preventDefault();
         const boardId = $('#boardId').val();
         renderOutputs(boardId);
       });
-
-      checkBoardConnection();
     });
-
-    function checkBoardConnection() {
-      $.get('/check-connection')
-        .done(() => {
-          console.log('Board is connected to the internet');
-        })
-        .fail(() => {
-          console.log('Board is not connected to the internet');
-          window.location.href = '/no-internet.html'; // Redirect to the no-internet.html page
-        });
-    }
 
     function renderOutputs(boardId) {
       const outputsContainer = $('#outputsContainer');
@@ -60,19 +47,14 @@
     }
 
     function updateOutput(boardId, output, state) {
-      const url = `/${state}?id=${boardId}&output=${output}`;
-      $.get(url)
-        .done((response) => {
-          console.log(response);
-        })
-        .fail((error) => {
-          console.log(error.responseText);
-        });
+      const url = `https://mishkaapi.vercel.app/${state}?id=${boardId}&output=${output}`;
+      window.location.href = url;
     }
 
     setTimeout(() => {
-      window.history.back();
-    }, 10000);
+     window.history.back();
+      }, 10000);
+
   </script>
 </body>
 </html>
