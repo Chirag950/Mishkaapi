@@ -21,92 +21,52 @@
         const boardId = $('#boardId').val();
         renderOutputs(boardId);
       });
-
-      const queryParams = new URLSearchParams(window.location.search);
-      const boardId = queryParams.get('boardId');
-      if (boardId) {
-        renderOutputs(boardId);
-      }
     });
 
     function renderOutputs(boardId) {
       const outputsContainer = $('#outputsContainer');
       outputsContainer.empty();
 
-      const numOutputs = boards[boardId].outputs.length;
+      $.ajax({
+        url: `/status?id=${boardId}`,
+        success: (data) => {
+          for (let i = 1; i <= 12; i++) {
+            const outputContainer = $('<div>', { class: 'output-container' });
+            const outputLabel = $('<label>').text(`Output ${i}`);
+            const onButton = $('<button>', {
+              class: 'on-button',
+              text: 'ON',
+              click: () => updateOutput(boardId, i, 'on')
+            });
+            const offButton = $('<button>', {
+              class: 'off-button',
+              text: 'OFF',
+              click: () => updateOutput(boardId, i, 'off')
+            });
 
-      for (let i = 1; i <= numOutputs; i++) {
-        const outputContainer = $('<div>', { class: 'output-container' });
-        const outputLabel = $('<label>').text(`Output ${i}`);
-        const onButton = $('<button>', {
-          class: 'on-button',
-          text: 'ON',
-          click: () => updateOutput(boardId, i, 'on')
-        });
-        const offButton = $('<button>', {
-          class: 'off-button',
-          text: 'OFF',
-          click: () => updateOutput(boardId, i, 'off')
-        });
-
-        outputContainer.append(outputLabel, onButton, offButton);
-        outputsContainer.append(outputContainer);
-
-        // Fetch the output status and update the button state
-        fetchOutputStatus(boardId, i);
-      }
+            outputContainer.append(outputLabel, onButton, offButton);
+            outputsContainer.append(outputContainer);
+          }
+        },
+        error: (error) => {
+          outputsContainer.text('Error: ' + error.responseText);
+        }
+      });
     }
 
     function updateOutput(boardId, output, state) {
       const url = `/${state}?id=${boardId}&output=${output}`;
-      fetch(url)
-        .then(response => {
-          if (response.ok) {
-            // Fetch the updated output status and update the button state
-            fetchOutputStatus(boardId, output);
-          } else {
-            console.error(`Failed to update output ${output}: ${response.statusText}`);
-          }
-        })
-        .catch(error => {
-          console.error(`Failed to update output ${output}: ${error}`);
-        });
+
+      $.ajax({
+        url: url,
+        success: (data) => {
+          console.log(data);
+        },
+        error: (error) => {
+          console.log('Error: ' + error.responseText);
+        }
+      });
     }
-
-    function fetchOutputStatus(boardId, output) {
-      const url = `/status?id=${boardId}&output=${output}`;
-      fetch(url)
-        .then(response => {
-          if (response.ok) {
-            return response.text();
-          } else {
-            throw new Error(`Failed to fetch output ${output} status: ${response.statusText}`);
-          }
-        })
-        .then(status => {
-          updateButtonState(output, status);
-        })
-        .catch(error => {
-          console.error(`Failed to fetch output ${output} status: ${error}`);
-        });
-    }
-
-    function updateButtonState(output, status) {
-      const onButton = $(`.on-button:nth-child(${output})`);
-      const offButton = $(`.off-button:nth-child(${output})`);
-
-      if (status === 'ON') {
-        onButton.prop('disabled', true);
-        offButton.prop('disabled', false);
-      } else {
-        onButton.prop('disabled', false);
-        offButton.prop('disabled', true);
-      }
-    }
-
-    setTimeout(() => {
-      window.history.back();
-    }, 10000);
   </script>
 </body>
 </html>
