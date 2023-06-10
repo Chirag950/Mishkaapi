@@ -47,14 +47,15 @@
     }
 
     function updateOutput(boardId, output, state) {
-      const url = `https://mishkaapi.vercel.app/${state}?id=${boardId}&output=${output}`;
-      window.location.href = url;
+  const url = `https://mishkaapi.vercel.app/${state}?id=${boardId}&output=${output}`;
+  window.location.href = url;
 
-      // Redirect to the main page after 1 second
-      setTimeout(() => {
-        window.location.href = 'https://mishkaapi.vercel.app/';
-      }, 1000);
-    }
+  // Delay the redirection to the main page by 1 second
+  setTimeout(() => {
+    window.location.href = 'https://mishkaapi.vercel.app/';
+  }, 1000);
+}
+
   </script>
 </body>
 </html>
