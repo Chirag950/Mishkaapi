@@ -21,12 +21,13 @@ app.get('/outputs', (req, res) => {
 
   const board = boards[id];
   if (board) {
-    const outputs = board.outputs.map((state, index) => {
-      return {
+    const outputs = [];
+    for (let i = 0; i < board.outputs.length; i++) {
+      outputs.push({
         boardId: id,
-        outputIndex: index + 1
-      };
-    });
+        outputIndex: i + 1
+      });
+    }
     res.json(outputs);
   } else {
     res.status(404).send('Board not found');
