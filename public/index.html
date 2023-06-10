@@ -27,44 +27,34 @@
       const outputsContainer = $('#outputsContainer');
       outputsContainer.empty();
 
-      $.get(`/outputs?id=${boardId}`, (outputs) => {
-        if (outputs.length > 0) {
-          outputs.forEach((output) => {
-            const { boardId, outputIndex } = output;
-            const outputContainer = $('<div>', { class: 'output-container' });
-            const outputLabel = $('<label>').text(`Output ${outputIndex}`);
-            const onButton = $('<button>', {
-              class: 'on-button',
-              text: 'ON',
-              click: () => updateOutput(boardId, outputIndex, 'on')
-            });
-            const offButton = $('<button>', {
-              class: 'off-button',
-              text: 'OFF',
-              click: () => updateOutput(boardId, outputIndex, 'off')
-            });
+      for (let i = 1; i <= 12; i++) {
+        const outputContainer = $('<div>', { class: 'output-container' });
+        const outputLabel = $('<label>').text(`Output ${i}`);
+        const onButton = $('<button>', {
+          class: 'on-button',
+          text: 'ON',
+          click: () => updateOutput(boardId, i, 'on')
+        });
+        const offButton = $('<button>', {
+          class: 'off-button',
+          text: 'OFF',
+          click: () => updateOutput(boardId, i, 'off')
+        });
 
-            outputContainer.append(outputLabel, onButton, offButton);
-            outputsContainer.append(outputContainer);
-          });
-        } else {
-          const noOutputsMessage = $('<p>').text('No outputs defined for the selected board');
-          outputsContainer.append(noOutputsMessage);
-        }
-      }).fail(() => {
-        const errorMessage = $('<p>').text('Failed to retrieve outputs for the selected board');
-        outputsContainer.append(errorMessage);
-      });
+        outputContainer.append(outputLabel, onButton, offButton);
+        outputsContainer.append(outputContainer);
+      }
     }
 
     function updateOutput(boardId, output, state) {
-      const url = `/${state}?id=${boardId}&output=${output}`;
-      $.get(url, (response) => {
-        console.log(response);
-      }).fail(() => {
-        console.log('Failed to update output state');
-      });
+      const url = `https://mishkaapi.vercel.app/${state}?id=${boardId}&output=${output}`;
+      window.location.href = url;
     }
+
+    setTimeout(() => {
+     window.history.back();
+      }, 10000);
+
   </script>
 </body>
 </html>

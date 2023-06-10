@@ -9,44 +9,23 @@ const boards = {
   },
   board2: {
     outputs: []
-  },
-  board3: {
-    outputs: []
   }
 };
 
-function getNumOutputs(boardId) {
-  const board = boards[boardId];
-  return board ? board.outputs.length : 0;
+// Define the number of outputs for each board
+const numOutputs = 12; // Change this value as per your requirement
+
+for (const board in boards) {
+  boards[board].outputs = new Array(numOutputs).fill(false);
 }
-
-// Endpoint to get the defined outputs of a board
-app.get('/outputs', (req, res) => {
-  const { id } = req.query;
-
-  const numOutputs = getNumOutputs(id);
-  if (numOutputs > 0) {
-    const outputs = [];
-    for (let i = 1; i <= numOutputs; i++) {
-      outputs.push({
-        boardId: id,
-        outputIndex: i
-      });
-    }
-    res.json(outputs);
-  } else {
-    res.status(404).send('Board not found or no outputs defined');
-  }
-});
 
 // Endpoint to get the status of an output
 app.get('/status', (req, res) => {
   const { id, output } = req.query;
   const outputIndex = parseInt(output) - 1;
 
-  const numOutputs = getNumOutputs(id);
-  if (numOutputs > 0 && outputIndex >= 0 && outputIndex < numOutputs) {
-    const board = boards[id];
+  const board = boards[id];
+  if (board && outputIndex >= 0 && outputIndex < board.outputs.length) {
     const status = board.outputs[outputIndex] ? 'ON' : 'OFF';
     res.send(status);
   } else {
@@ -59,9 +38,8 @@ app.get('/on', (req, res) => {
   const { id, output } = req.query;
   const outputIndex = parseInt(output) - 1;
 
-  const numOutputs = getNumOutputs(id);
-  if (numOutputs > 0 && outputIndex >= 0 && outputIndex < numOutputs) {
-    const board = boards[id];
+  const board = boards[id];
+  if (board && outputIndex >= 0 && outputIndex < board.outputs.length) {
     board.outputs[outputIndex] = true;
     res.send('Output turned on');
   } else {
@@ -74,9 +52,8 @@ app.get('/off', (req, res) => {
   const { id, output } = req.query;
   const outputIndex = parseInt(output) - 1;
 
-  const numOutputs = getNumOutputs(id);
-  if (numOutputs > 0 && outputIndex >= 0 && outputIndex < numOutputs) {
-    const board = boards[id];
+  const board = boards[id];
+  if (board && outputIndex >= 0 && outputIndex < board.outputs.length) {
     board.outputs[outputIndex] = false;
     res.send('Output turned off');
   } else {
