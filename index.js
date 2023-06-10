@@ -6,12 +6,10 @@ const app = express();
 
 const boards = {
   board1: {
-    outputs: [false, false, false, false, false, false, false, false, false, false, false, false],
-    connected: true // Assuming board1 is initially connected
+    outputs: [false, false, false, false, false, false, false, false, false, false, false, false]
   },
   board2: {
-    outputs: [false, false, false, false, false, false, false, false, false, false, false, false],
-    connected: false // Assuming board2 is initially not connected
+    outputs: [false, false, false, false, false, false, false, false, false, false, false, false]
   }
 };
 
@@ -57,25 +55,13 @@ app.get('/off', (req, res) => {
   }
 });
 
-// Endpoint to check the board connection status
-app.get('/connection', (req, res) => {
-  const { id } = req.query;
-
-  const board = boards[id];
-  if (board) {
-    const status = board.connected ? 'Connected' : 'Not connected';
-    res.send(status);
-  } else {
-    res.status(404).send('Board not found');
-  }
-});
-
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// Start the server
 app.listen(process.env.PORT || 4000, () => {
   console.log('Server is running');
 });

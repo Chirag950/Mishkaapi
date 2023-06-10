@@ -27,9 +27,14 @@
       const outputsContainer = $('#outputsContainer');
       outputsContainer.empty();
 
-      // Add connection status placeholder
-      const connectionStatus = $('<div>', { id: 'connectionStatus' });
-      outputsContainer.append(connectionStatus);
+      // Check if the board is connected to the internet
+      const isBoardConnected = navigator.onLine;
+
+      if (!isBoardConnected) {
+        const message = $('<p>').text('Board is not connected to the internet');
+        outputsContainer.append(message);
+        return;
+      }
 
       for (let i = 1; i <= 12; i++) {
         const outputContainer = $('<div>', { class: 'output-container' });
@@ -51,28 +56,22 @@
     }
 
     function updateOutput(boardId, output, state) {
-      const connectionUrl = `https://mishkaapi.vercel.app/connection?id=${boardId}`;
+      // Check if the board is connected to the internet
+      const isBoardConnected = navigator.onLine;
 
-      // Check board connection status
-      $.ajax({
-        url: connectionUrl,
-        success: (response) => {
-          if (response === 'Connected') {
-            const url = `https://mishkaapi.vercel.app/${state}?id=${boardId}&output=${output}`;
-            window.location.href = url;
-          } else {
-            $('#connectionStatus').text('Board is not connected to the internet');
-          }
-        },
-        error: () => {
-          $('#connectionStatus').text('Board is not connected to the internet');
-        }
-      });
+      if (!isBoardConnected) {
+        alert('Board is not connected to the internet');
+        return;
+      }
+
+      const url = `https://mishkaapi.vercel.app/${state}?id=${boardId}&output=${output}`;
+      window.location.href = url;
     }
 
     setTimeout(() => {
       window.history.back();
     }, 10000);
+
   </script>
 </body>
 </html>
