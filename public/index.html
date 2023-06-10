@@ -49,10 +49,7 @@
     function updateOutput(boardId, output, state) {
       const url = `https://mishkaapi.vercel.app/${state}?id=${boardId}&output=${output}`;
       window.location.href = url;
-
-    setTimeout(() => {
-     window.history.back();
-      }, 10000);
+      
     }
 
   </script>
