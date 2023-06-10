@@ -4,10 +4,10 @@
     { "src": "index.js", "use": "@vercel/node" }
   ],
   "routes": [
-    { "src": "/status", "dest": "/index.js" },
-    { "src": "/on", "dest": "/index.js" },
-    { "src": "/off", "dest": "/index.js" },
-    { "src": "/numOutputs", "dest": "/index.js" },
-    { "src": "/(.*)", "dest": "/public/$1" }
+    { "src": "/status", "dest": "index.js" },
+    { "src": "/on", "dest": "index.js" },
+    { "src": "/off", "dest": "index.js" },
+    { "src": "/numOutputs", "dest": "index.js" },
+    { "src": "/(.*)", "dest": "public/$1" }
   ]
 }
