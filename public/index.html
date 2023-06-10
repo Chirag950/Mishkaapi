@@ -27,46 +27,52 @@
       const outputsContainer = $('#outputsContainer');
       outputsContainer.empty();
 
-      $.ajax({
-        url: `/status?id=${boardId}`,
-        success: (data) => {
-          for (let i = 1; i <= 12; i++) {
-            const outputContainer = $('<div>', { class: 'output-container' });
-            const outputLabel = $('<label>').text(`Output ${i}`);
-            const onButton = $('<button>', {
-              class: 'on-button',
-              text: 'ON',
-              click: () => updateOutput(boardId, i, 'on')
-            });
-            const offButton = $('<button>', {
-              class: 'off-button',
-              text: 'OFF',
-              click: () => updateOutput(boardId, i, 'off')
-            });
+      // Add connection status placeholder
+      const connectionStatus = $('<div>', { id: 'connectionStatus' });
+      outputsContainer.append(connectionStatus);
 
-            outputContainer.append(outputLabel, onButton, offButton);
-            outputsContainer.append(outputContainer);
-          }
-        },
-        error: (error) => {
-          outputsContainer.text('Error: ' + error.responseText);
-        }
-      });
+      for (let i = 1; i <= 12; i++) {
+        const outputContainer = $('<div>', { class: 'output-container' });
+        const outputLabel = $('<label>').text(`Output ${i}`);
+        const onButton = $('<button>', {
+          class: 'on-button',
+          text: 'ON',
+          click: () => updateOutput(boardId, i, 'on')
+        });
+        const offButton = $('<button>', {
+          class: 'off-button',
+          text: 'OFF',
+          click: () => updateOutput(boardId, i, 'off')
+        });
+
+        outputContainer.append(outputLabel, onButton, offButton);
+        outputsContainer.append(outputContainer);
+      }
     }
 
     function updateOutput(boardId, output, state) {
-      const url = `/${state}?id=${boardId}&output=${output}`;
+      const connectionUrl = `https://mishkaapi.vercel.app/connection?id=${boardId}`;
 
+      // Check board connection status
       $.ajax({
-        url: url,
-        success: (data) => {
-          console.log(data);
+        url: connectionUrl,
+        success: (response) => {
+          if (response === 'Connected') {
+            const url = `https://mishkaapi.vercel.app/${state}?id=${boardId}&output=${output}`;
+            window.location.href = url;
+          } else {
+            $('#connectionStatus').text('Board is not connected to the internet');
+          }
         },
-        error: (error) => {
-          console.log('Error: ' + error.responseText);
+        error: () => {
+          $('#connectionStatus').text('Board is not connected to the internet');
         }
       });
     }
+
+    setTimeout(() => {
+      window.history.back();
+    }, 10000);
   </script>
 </body>
 </html>

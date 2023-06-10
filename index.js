@@ -6,12 +6,12 @@ const app = express();
 
 const boards = {
   board1: {
-    connected: true,
-    outputs: [false, false, false, false, false, false, false, false, false, false, false, false]
+    outputs: [false, false, false, false, false, false, false, false, false, false, false, false],
+    connected: true // Assuming board1 is initially connected
   },
   board2: {
-    connected: true,
-    outputs: [false, false, false, false, false, false, false, false, false, false, false, false]
+    outputs: [false, false, false, false, false, false, false, false, false, false, false, false],
+    connected: false // Assuming board2 is initially not connected
   }
 };
 
@@ -21,20 +21,12 @@ app.get('/status', (req, res) => {
   const outputIndex = parseInt(output) - 1;
 
   const board = boards[id];
-  if (board) {
-    if (!board.connected) {
-      res.status(404).send('Board not connected to the internet');
-      return;
-    }
-
-    if (outputIndex >= 0 && outputIndex < board.outputs.length) {
-      const status = board.outputs[outputIndex] ? 'ON' : 'OFF';
-      res.send(status);
-      return;
-    }
+  if (board && outputIndex >= 0 && outputIndex < board.outputs.length) {
+    const status = board.outputs[outputIndex] ? 'ON' : 'OFF';
+    res.send(status);
+  } else {
+    res.status(404).send('Output not found');
   }
-
-  res.status(404).send('Output not found');
 });
 
 // Endpoint to turn on an output
@@ -43,20 +35,12 @@ app.get('/on', (req, res) => {
   const outputIndex = parseInt(output) - 1;
 
   const board = boards[id];
-  if (board) {
-    if (!board.connected) {
-      res.status(404).send('Board not connected to the internet');
-      return;
-    }
-
-    if (outputIndex >= 0 && outputIndex < board.outputs.length) {
-      board.outputs[outputIndex] = true;
-      res.send('Output turned on');
-      return;
-    }
+  if (board && outputIndex >= 0 && outputIndex < board.outputs.length) {
+    board.outputs[outputIndex] = true;
+    res.send('Output turned on');
+  } else {
+    res.status(404).send('Output not found');
   }
-
-  res.status(404).send('Output not found');
 });
 
 // Endpoint to turn off an output
@@ -65,20 +49,25 @@ app.get('/off', (req, res) => {
   const outputIndex = parseInt(output) - 1;
 
   const board = boards[id];
-  if (board) {
-    if (!board.connected) {
-      res.status(404).send('Board not connected to the internet');
-      return;
-    }
-
-    if (outputIndex >= 0 && outputIndex < board.outputs.length) {
-      board.outputs[outputIndex] = false;
-      res.send('Output turned off');
-      return;
-    }
+  if (board && outputIndex >= 0 && outputIndex < board.outputs.length) {
+    board.outputs[outputIndex] = false;
+    res.send('Output turned off');
+  } else {
+    res.status(404).send('Output not found');
   }
+});
 
-  res.status(404).send('Output not found');
+// Endpoint to check the board connection status
+app.get('/connection', (req, res) => {
+  const { id } = req.query;
+
+  const board = boards[id];
+  if (board) {
+    const status = board.connected ? 'Connected' : 'Not connected';
+    res.send(status);
+  } else {
+    res.status(404).send('Board not found');
+  }
 });
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -87,7 +76,6 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Start the server
 app.listen(process.env.PORT || 4000, () => {
   console.log('Server is running');
 });
