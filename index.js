@@ -1,9 +1,11 @@
 const express = require('express');
+const app = express();
 const jquery = require('jquery');
 const path = require('path');
+const cors = require('cors');
 
+app.use(cors());
 
-const app = express();
 
 const boards = {
   board1: {
