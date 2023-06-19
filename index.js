@@ -1,11 +1,12 @@
 const express = require('express');
 const app = express();
-const jquery = require('jquery');
 const path = require('path');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 
 app.use(cors());
-
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 const boards = {
   board1: {
@@ -16,7 +17,6 @@ const boards = {
   }
 };
 
-// Endpoint to get the status of an output
 app.get('/status', (req, res) => {
   const { id, output } = req.query;
   const outputIndex = parseInt(output) - 1;
@@ -30,7 +30,6 @@ app.get('/status', (req, res) => {
   }
 });
 
-// Endpoint to turn on an output
 app.get('/on', (req, res) => {
   const { id, output } = req.query;
   const outputIndex = parseInt(output) - 1;
@@ -44,7 +43,6 @@ app.get('/on', (req, res) => {
   }
 });
 
-// Endpoint to turn off an output
 app.get('/off', (req, res) => {
   const { id, output } = req.query;
   const outputIndex = parseInt(output) - 1;
@@ -60,12 +58,10 @@ app.get('/off', (req, res) => {
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Start the server
 app.listen(process.env.PORT || 4000, () => {
   console.log('Server is running');
 });
